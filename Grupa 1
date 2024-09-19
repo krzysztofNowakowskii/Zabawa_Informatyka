@@ -1,0 +1,280 @@
+GRUPA_1
+Krzysztof Nowakowski
+
+#include <iostream>
+#include <bitset>
+
+using namespace std;
+
+int main() {
+    int liczba;
+    
+    cout << "Podaj liczbe dziesietna: ";
+    cin >> liczba;
+    
+    bitset<8> binarna(liczba);
+    
+    cout << "Liczba dziesietna: " << liczba << endl;
+    cout << "Reprezentacja binarna: " << binarna << endl;
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Jan Wencel
+
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+// Buforowanie wyników
+unordered_map<int, string> memo;
+
+string decimal_to_binary(int n) {
+    // Sprawdzanie, czy wartość już została obliczona
+    if (memo.find(n) != memo.end()) {
+        return memo[n];
+    }
+    
+    // Podstawa rekurencji
+    if (n == 0) {
+        return "0";
+    } else if (n == 1) {
+        return "1";
+    }
+    
+    // Obliczanie binarnej reprezentacji dla n
+    string result = decimal_to_binary(n / 2) + to_string(n % 2);
+    
+    // Zapamiętujemy wynik dla n
+    memo[n] = result;
+    
+    return result;
+}
+
+int main() {
+    int number;
+    cout << "Podaj liczbe w systemie dziesietnym: ";
+    cin >> number;
+
+    string binary_representation = decimal_to_binary(number);
+    cout << "Liczba " << number << " w systemie binarnym to: " << binary_representation << endl;
+
+    return 0;
+}
+
+Grzegorz Przytuła
+______________________________________________________________________________________________________________________
+#include <bits/stdc++.h>  // Biblioteka ogólna
+
+using namespace std;
+
+void decimalToBinary(int n) {
+    stack<int> binaryStack;  // Stos przechowujący reszty z dzielenia
+
+    // Jeśli liczba to 0, od razu wypisz wynik
+    if (n == 0) {
+        cout << "0";
+        return;
+    }
+
+    // Pętla do obliczania reszt z dzielenia przez 2
+    while (n > 0) {
+        int remainder = n % 2;  // Oblicz resztę z dzielenia przez 2
+        binaryStack.push(remainder);  // Umieść resztę na stosie
+        n /= 2;  // Zaktualizuj n (dziel n przez 2)
+    }
+
+    // Wyciąganie elementów ze stosu w celu uzyskania binarnej reprezentacji
+    while (!binaryStack.empty()) {
+        cout << binaryStack.top();  // Pobierz element z góry stosu
+        binaryStack.pop();  // Usuń element ze stosu
+    }
+
+    cout << "\n";  // Zakończ linię po wypisaniu liczby binarnej
+}
+
+int main() {
+    cin.tie(0)->sync_with_stdio(0);
+    int number;
+    cout << "Podaj liczbe dziesietna: ";
+    cin >> number;
+
+    cout << "Reprezentacja binarna: ";
+    decimalToBinary(number);
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Piotr Kupiec
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Funkcja konwertująca liczbę dziesiętną na binarną
+void decimalToBinary(int n) {
+    vector<int> binary;  // Wektor do przechowywania bitów liczby binarnej
+
+    while (n > 0) {
+        // Wyodrębnienie najmłodszego bitu za pomocą operacji AND
+        // Dodanie najmłodszego bitu do wektora
+        binary.push_back(n & 1);
+        // Przesunięcie bitowe w prawo, czyli dzielenie przez 2
+        n >>= 1;
+    }
+
+    // Wydrukowanie bitów od końca, ponieważ bity zostały zapisane w odwrotnej kolejności
+    for (int i = binary.size() - 1; i >= 0; i--) {
+        cout << binary[i];
+    }
+
+    cout << endl;
+}
+
+int main() {
+    string input;  // Zmienna do przechowywania wejścia użytkownika
+
+    while (true) {
+        cout << "Podaj liczbę dziesiętną (lub 'stop' aby zakończyć): ";
+        cin >> input;  // Pobranie wejścia od użytkownika
+
+        // Sprawdzenie, czy użytkownik wpisał "stop"
+        if (input == "stop") {
+            break;  // Zakończenie pętli, gdy użytkownik wpisze "stop"
+        }
+
+        try {
+            // Próba konwersji wejścia na liczbę całkowitą
+            int number = stoi(input);
+            cout << "Reprezentacja binarna: ";
+            // Obsługa przypadku dla liczby 0
+            if (number == 0) {
+                cout << "0" << endl;
+            } else {
+                // Wywołanie funkcji konwertującej na binarną
+                decimalToBinary(number);
+            }
+        } catch (invalid_argument& e) {
+            // Obsługa sytuacji, gdy wejście nie jest prawidłową liczbą
+            cout << "Nieprawidłowy wpis, spróbuj ponownie." << endl;
+        } catch (out_of_range& e) {
+            // Obsługa sytuacji, gdy liczba jest poza zakresem
+            cout << "Wpis jest poza zakresem, spróbuj ponownie." << endl;
+        }
+    }
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Piotr Ptaszek
+
+#include <iostream>
+#include <string>
+
+// Funkcja rekurencyjna do konwersji liczby dziesiętnej na binarną
+std::string decToBin(int n) {
+    // Podstawa rekurencji: jeśli liczba to 0
+    if (n == 0) {
+        return "";
+    }
+    // Rekurencja: dzielenie liczby przez 2
+    // wynik dla n/2 i dołączenie aktualnego bitu (n % 2)
+    return decToBin(n / 2) + (n % 2 == 0 ? '0' : '1');
+}
+
+int main() {
+    int liczba;
+    std::cout << "Podaj liczbę dziesiętną: ";
+    std::cin >> liczba;
+
+    // Obsługa przypadku liczby 0
+    if (liczba == 0) {
+        std::cout << "Reprezentacja binarna liczby " << liczba << " to: 0" << std::endl;
+    } else {
+        // Wywołanie funkcji i wypisanie wyniku
+        std::string wynik = decToBin(liczba);
+        std::cout << "Reprezentacja binarna liczby " << liczba << " to: " << wynik << std::endl;
+    }
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Dominik Parszau
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void zamienNaBinarny(int liczba) {
+
+    vector<int> binarny;
+
+    while (liczba > 0) {
+
+        binarny.push_back(liczba % 2);
+        liczba /= 2;
+    }
+
+    for (int i = binarny.size() - 1; i >= 0; i--) {
+        cout << binarny[i];
+    }
+    cout << endl;
+}
+
+int main() {
+    int liczba;
+    cout << "Podaj liczbe dziesietna: ";
+    cin >> liczba;
+
+    cout << "Odpowiednik binarny dla wpisanej liczby: ";
+    zamienNaBinarny(liczba);
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Wiktor Mrozowski
+
+#include <bits/stdc++.h>
+using namespace std;
+ 
+void strToBinary(string s)
+{
+    int n = s.length();
+    int b;
+ 
+    for (int i = 0; i < n; i++)
+    {
+        // wartość ASCII
+        int val = int(s[i]);
+        b = 0;
+        // konwertowanie ASCII do kodu binarnego
+        string bin = "";
+        while (val > 0)
+        {
+            (val % 2)? bin.push_back('1') :
+                       bin.push_back('0');
+            val /= 2;
+            b++;
+        }
+
+        for(b; b <= 8; b++)
+        {
+                               bin.push_back('0');
+        }
+
+        reverse(bin.begin(), bin.end());
+       
+        cout << bin << " ";
+    }
+}
+ 
+int main()
+{
+    string s;
+    cin >> s;
+    strToBinary(s);
+    return 0;
+}
