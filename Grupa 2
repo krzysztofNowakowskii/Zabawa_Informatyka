@@ -1,0 +1,334 @@
+Grupa_2
+Agata Szczepańska
+
+#include <iostream>
+#include <queue>
+#include <string>
+#include <limits>
+
+using namespace std;
+
+string decimalToBinaryUsingQueue(int number) {
+    if (number == 0) {
+        return "0";
+    }
+    
+    // Inicjalizacja kolejki
+    queue<char> binaryQueue;
+    
+    // Proces dzielenia liczby przez 2 i przechowywania reszt
+    while (number > 0) {
+        char remainder = (number % 2) + '0';  // Przekształcenie liczby na znak ('0' lub '1')
+        binaryQueue.push(remainder);  // Dodaj resztę na koniec kolejki
+        number /= 2;  // Zaktualizuj liczbę
+    }
+    
+    // Konwersja reszt w kolejce na łańcuch binarny
+    string binaryRepresentation;
+    while (!binaryQueue.empty()) {
+        binaryRepresentation = binaryQueue.front() + binaryRepresentation;  // Dodaj element na początek łańcucha
+        binaryQueue.pop();
+    }
+    
+    return binaryRepresentation;
+}
+
+int main() {
+    int decimalNumber;
+    
+    while (true) {
+        cout << "Podaj liczbę dziesiętną: ";
+        cin >> decimalNumber;
+        
+        if (cin.fail()) {
+            cin.clear(); // Czyść błąd
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignoruj pozostałe znaki w buforze
+            cout << "Niepoprawne dane wejściowe. Proszę podać liczbę całkowitą." << endl;
+            continue;
+        }
+        
+        if (decimalNumber >= 0) {
+            break; // Wyjdź z pętli, jeśli liczba jest nieujemna
+        } else {
+            cout << "Proszę podać liczbę nieujemną." << endl;
+        }
+    }
+    
+    string binaryRepresentation = decimalToBinaryUsingQueue(decimalNumber);
+    cout << "Liczba dziesiętna " << decimalNumber << " w systemie binarnym to " << binaryRepresentation << endl;
+    
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Alicja Lisowska
+
+#include <iostream>
+using namespace std;
+ 
+// Funkcja rekurencyjna do konwersji liczby dziesiętnej na binarną
+void decToBin(int n, char* result, int& index) {
+    if (n == 0) {
+        return;
+    }
+ 
+    // Wywołanie rekurencyjne dla n / 2
+    decToBin(n / 2, result, index);
+ 
+    // Dodanie reszty z dzielenia przez 2
+    result[index++] = (n % 2) ? '1' : '0';
+}
+ 
+// Funkcja pomocnicza do wyświetlania wyniku
+void printBinary(int n) {
+    // Tablica do przechowywania reprezentacji binarnej
+    char result[32]; // Zakładamy, że liczba nie przekroczy 31 bitów + 1 na null terminator
+    int index = 0;
+ 
+    // Specjalny przypadek dla liczby 0
+    if (n == 0) {
+        cout << "0";
+        return;
+    }
+ 
+    // Wywołanie funkcji rekurencyjnej
+    decToBin(n, result, index);
+ 
+    // Dodanie null terminatora
+    result[index] = '\0';
+ 
+    // Wyświetlenie wyniku
+    cout << result;
+}
+ 
+int main() {
+    int liczba;
+    cout << "Wpisz liczbę dziesiętną: ";
+    cin >> liczba;
+ 
+    cout << "Reprezentacja binarna liczby " << liczba << " to: ";
+    printBinary(liczba);
+    cout << endl;
+ 
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Jan Ślązak
+
+#include <iostream>
+#include <bitset>
+#include <sstream>
+
+int main() {
+    int number; // liczba dziesiętna
+    std::cout << "Podaj liczbę dziesiętną: ";
+    std::cin >> number;
+
+    // Używamy bitset, który dla przykładu przyjmuje 32 bity (dla liczb int)
+    std::bitset<32> bits(number); 
+
+    // Konwertujemy bitset na stringstream
+    std::stringstream ss;
+    ss << bits;
+
+    // Usuwanie wiodących zer
+    std::string binaryString = ss.str();
+    auto firstOne = binaryString.find('1');
+    if (firstOne != std::string::npos) {
+        binaryString = binaryString.substr(firstOne); // Usuwamy zera przed pierwszą '1'
+    } else {
+        binaryString = "0"; // Jeśli liczba to 0, wynik to po prostu "0"
+    }
+
+    // Wyświetlenie wyniku
+    std::cout << "Liczba w systemie binarnym: " << binaryString << std::endl;
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Julia Łopacińska
+
+#include <iostream>
+#include <string>
+
+std::string DecimalToBinary(int number) {
+    std::string binaryRepresentation = "";
+
+    // Iterujemy, dopóki liczba jest różna od 0
+    for (int i = sizeof(number) * 8 - 1; i >= 0; i--) {
+        // Sprawdzamy, czy dany bit jest ustawiony (1) poprzez przesunięcie bitowe
+        if ((number >> i) & 1) {
+            binaryRepresentation += "1";
+        } else {
+            binaryRepresentation += "0";
+        }
+    }
+
+    // Usunięcie początkowych zer z wyniku
+    binaryRepresentation.erase(0, binaryRepresentation.find_first_not_of('0'));
+
+    // Obsługa przypadku, gdy liczba to 0
+    if (binaryRepresentation == "") {
+        binaryRepresentation = "0";
+    }
+
+    return binaryRepresentation;
+}
+
+int main() {
+    int number;
+
+    std::cout << "Podaj liczbę dziesiętną: ";
+    std::cin >> number;
+
+    std::string binary = DecimalToBinary(number);
+    std::cout << "Postać binarna: " << binary << std::endl;
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Łukasz Spychała
+
+#include <iostream>
+#include <bitset>  // dla łatwej reprezentacji binarnej
+
+int main() {
+    unsigned int liczba;
+    std::cout << "Podaj liczbę dziesiętną: ";
+    std::cin >> liczba;
+
+    // Liczba bitów do zamaskowania
+    const int ROZMIAR = 32;
+    std::bitset<ROZMIAR> wynik; // przechowuje wynik jako ciąg bitów
+
+    for (int i = 0; i < ROZMIAR; i++) {
+        // Tworzenie maski bitowej przesuniętej o i pozycji
+        unsigned int maska = 1 << i;
+
+        // XOR pomiędzy liczbą a maską, sprawdzamy wartość bitu
+        bool bit = (liczba & maska) != 0;
+        
+        // Zapisanie bitu do wyniku
+        wynik[i] = bit;
+    }
+
+    // Wyświetlenie wyniku
+    std::cout << "Binarna reprezentacja liczby: " << wynik << std::endl;
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Krzysztof Wilejkis
+
+#include <iostream>
+#include <bitset>
+#include <string>
+
+using namespace std;
+
+// Funkcja, która zamienia liczbę dziesiętną na binarną reprezentację i odwraca bity
+string reverseBits(int number) {
+    // Tworzenie 32-bitowej binarnej reprezentacji liczby
+    bitset<32> binary(number);
+
+    // Zamiana bitów na ciąg znaków
+    string binaryString = binary.to_string();
+
+    // Odwracanie ciągu binarnego
+    reverse(binaryString.begin(), binaryString.end());
+
+    // Usunięcie zbędnych zer z początku
+    binaryString = binaryString.substr(binaryString.find('1'));
+
+    return binaryString;
+}
+
+int main() {
+    int number;
+
+    cout << "Podaj liczbę dziesiętną: ";
+    cin >> number;
+
+    // Wywołanie funkcji do odwracania bitów
+    string reversedBinary = reverseBits(number);
+
+    cout << "Odwrócona binarna reprezentacja: " << reversedBinary << endl;
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Krzysztof Zygmunt
+
+#include <iostream>
+using namespace std;
+
+void decimalToBinary(int n) {
+    // Tworzymy maskę, która zaczyna się od najbardziej znaczącego bitu liczby
+    unsigned int maska = 1 << (sizeof(int) * 8 - 1); // Maska ustawiona na najwyższy bit
+
+    bool leading_zero = true; // Zmienna pomocnicza do pomijania wiodących zer
+
+    for (int i = 0; i < sizeof(int) * 8; ++i) {
+        // Sprawdzamy, czy bieżący bit jest równy 1
+        if (n & maska) {
+            cout << "1";
+            leading_zero = false; // Gdy znajdziemy pierwszy bit 1, przestajemy pomijać zera
+        } else if (!leading_zero) {
+            cout << "0"; // Wypisujemy 0 tylko po pierwszym 1
+        }
+        
+        // Przesuwamy maskę w prawo o 1 bit
+        maska >>= 1;
+    }
+
+    // W przypadku liczby 0, wypisujemy po prostu 0
+    if (leading_zero) {
+        cout << "0";
+    }
+    
+    cout << endl;
+}
+
+int main() {
+    int liczba;
+
+    cout << "Podaj liczbe dziesietna: ";
+    cin >> liczba;
+
+    cout << "Liczba w systemie binarnym: ";
+    decimalToBinary(liczba);
+
+    return 0;
+}
+______________________________________________________________________________________________________________________
+Stanisław Demięcki
+
+#include<iostream>
+
+using namespace std;
+
+int main()
+{
+    int number, n, i=0;
+    cin >> number;
+    int remainder[32];
+
+    if (number == 0)
+    {
+        cout << 0;
+        return 0;
+    }
+
+    while(number != 0)
+    {
+        remainder[i]=number % 2;
+        number = number/2;
+        i++;
+    }
+
+    while(i > 0)
+    {
+        i--;
+        cout << remainder[i];
+    }
+    return 0;
+}
